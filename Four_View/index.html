@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        svg {
+            width: 40vw;
+            height: 40vw;
+        }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="js/scatter_plot.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+    <div>
+        <svg viewBox="0 0 1000 1000" id="figure1">
+    </svg>
+        <svg viewBox="0 0 1000 1000" id="figure2">
+    </svg>
+        <svg viewBox="0 0 1000 1000" id="figure3">
+    </svg>
+        <svg viewBox="0 0 1000 1000" id="figure4">
+    </svg>
+    </div>
+    <script>
+        d3.tsv("./data/palmer_penguin_species.tsv")
+            .then(
+                function(data) {
+
+                    let species = ['Adelie', 'Gentoo', 'Chinstrap']
+                    let classic_colors = ["#440154", "#21908dff", "#fde725ff"]
+                    let color = d3.scaleOrdinal()
+                        .domain(species)
+                        .range(classic_colors);
+
+                    // function to format the data
+                    function formatted(data, xVal, yVal, r) {
+                        return d3.map(data, d => {
+                            return {
+                                x: d[xVal],
+                                y: d[yVal],
+                                r: d[r],
+                                c: color(d.species)
+                            }
+                        })
+                    }
+
+                    // four scatterplots
+                    scatter_plot(
+                        formatted(data, 'culmen_length_mm', 'body_mass_g', "culmen_length_mm"),
+                        "#figure1",
+                        title = "Pinguines _ 1",
+                        xLabel = "culmen_length_mm",
+                        yLabel = "body_mass_g",
+                        legend = species,
+                        legendcolors = classic_colors,
+                        margin = 200
+                    )
+
+                    scatter_plot(
+                        formatted(data, 'flipper_length_mm', 'body_mass_g', "culmen_length_mm"),
+                        "#figure2",
+                        title = "Pinguines _ 2",
+                        xLabel = "flipper_length_mm",
+                        yLabel = "body_mass_g",
+                        legend = species,
+                        legendcolors = classic_colors,
+                        margin = 200
+                    )
+
+                    scatter_plot(
+                        formatted(data, 'culmen_length_mm', 'culmen_depth_mm', "flipper_length_mm"),
+                        "#figure3",
+                        title = "Pinguines _ 3",
+                        xLabel = "culmen_length_mm",
+                        yLabel = "culmen_depth_mm",
+                        legend = species,
+                        legendcolors = classic_colors,
+                        margin = 200
+                    )
+                    scatter_plot(
+                        formatted(data, 'flipper_length_mm', 'culmen_depth_mm', "flipper_length_mm"),
+                        "#figure4",
+                        title = "Pinguines _ 4",
+                        xLabel = "flipper_length_mm",
+                        yLabel = "culmen_depth_mm",
+                        legend = species,
+                        legendcolors = classic_colors,
+                        margin = 200
+                    )
+                }
+            )
+    </script>
+</body>
+
+</html>
